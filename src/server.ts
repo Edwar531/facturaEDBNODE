@@ -1,7 +1,7 @@
 import express, { Application } from "express";
 import cors from "cors";
 import multer from "multer";
-express.static('./src/assets');
+express.static("./src/assets");
 // rutas
 import authRoutes from "./routes/auth.route";
 import clientesRoutes from "./routes/clientes.route";
@@ -49,6 +49,7 @@ class Server {
   async dbConnection() {
     try {
       await db.authenticate();
+      console.log("Base de datos conectada.");
     } catch (error: any) {
       throw new Error(error);
     }
@@ -60,7 +61,7 @@ class Server {
   }
 
   routes() {
-    this.app.use("/src/assets",express.static('./src/assets/'))
+    this.app.use("/src/assets", express.static("./src/assets/"));
     this.app.use("/api/auth", authRoutes);
     this.app.use("/api/comercio/ventas", validarJWT, ventasRoutes);
     this.app.use(
@@ -73,7 +74,8 @@ class Server {
     this.app.use("/api/clientes", validarJWT, clientesRoutes);
     this.app.use(
       "/api/empresa",
-      validarJWT, upload.single("imagen"),
+      validarJWT,
+      upload.single("imagen"),
       empresaRoutes
     );
   }
