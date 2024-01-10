@@ -22,8 +22,6 @@ interface attributes {
   deshabilitado: number;
   // created_at: Date;
   // updated_at: Date;
-
-
 }
 
 interface ModelInstance extends Model<attributes>, attributes {}
@@ -85,7 +83,6 @@ export const Venta = db.define<ModelInstance>("Venta", {
   },
   data_cliente: {
     type: DataTypes.TEXT("long"),
-    allowNull: false,
   },
   cliente_id: {
     type: DataTypes.BIGINT,
@@ -106,7 +103,6 @@ export const Venta = db.define<ModelInstance>("Venta", {
   //   type: DataTypes.DATE,
   //   allowNull: false,
   // },
-  
 });
 
 Venta.belongsTo(Cliente, {

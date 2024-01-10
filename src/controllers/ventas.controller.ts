@@ -174,7 +174,7 @@ export const postVenta = async (req: Request, res: Response) => {
     dataV.cliente_id = cliente["id"];
   } else {
     dataV.data_cliente = "";
-    dataV.cliente_id = "";
+    dataV.cliente_id = false;
   }
 
   // validar detalles

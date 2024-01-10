@@ -109,8 +109,7 @@ export const DetalleVenta = db.define<ModelInstance>("DetalleVenta", {
     allowNull: false,
   },
   tipo_precio: {
-    type: DataTypes.DOUBLE,
-    allowNull: false,
+    type: DataTypes.TEXT,
   },
   total_iva: {
     type: DataTypes.DOUBLE,
