@@ -46,30 +46,30 @@ export const postEmpresa = async (req: Request, res: Response) => {
 export const subirImagen = async (req: Request, res: Response) => {
   const { uid: user_id } = req.query;
 
-  // let empresa = await Empresa.findOne({
-  //   where: {
-  //     user_id,
-  //   },
-  // });
+  let empresa = await Empresa.findOne({
+    where: {
+      user_id,
+    },
+  });
 
-  // const pathSave = `src/assets/imgs-empresas/${user_id}`;
+  const pathSave = `src/assets/imgs-empresas/${user_id}`;
 
-  // if (empresa) {
-  //   let path: any = empresa.path_img;
-  //   if (path) {
-  //     path = path.split("src");
-  //     path = path[1];
-  //     path = "src" + path;
-  //     if (fs.existsSync(path)) {
-  //       await fs.unlinkSync(path);
-  //     }
-  //   }
+  if (empresa) {
+    let path: any = empresa.path_img;
+    if (path) {
+      path = path.split("src");
+      path = path[1];
+      path = "src" + path;
+      if (fs.existsSync(path)) {
+        await fs.unlinkSync(path);
+      }
+    }
 
-  //   empresa.path_img = `${req.protocol}://${req.get("host")}/${pathSave}/${
-  //     req.file?.filename
-  //   }`;
-  //   empresa.save();
-  // }
+    empresa.path_img = `${req.protocol}://${req.get("host")}/${pathSave}/${
+      req.file?.filename
+    }`;
+    empresa.save();
+  }
 
   // resizeImg(req.file?.path, pathSave, req.file?.filename, 300);
 
