@@ -61,7 +61,7 @@ class Server {
   }
 
   routes() {
-    this.app.use("/src/assets", express.static("./src/assets/"));
+    this.app.use("/src/assets/", express.static("./src/assets/"));
     this.app.use("/api/auth", authRoutes);
     this.app.use("/api/comercio/ventas", validarJWT, ventasRoutes);
     this.app.use(

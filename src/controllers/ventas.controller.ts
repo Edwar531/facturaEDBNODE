@@ -58,7 +58,6 @@ export const getVenta = async (req: Request, res: Response) => {
 
   const empresa = await Empresa.findOne({ where: { user_id } });
 
-  
   return res.json({
     id,
     user_id,
@@ -368,7 +367,12 @@ const guardarDetalles = async (detalles: any, id: number, res: Response) => {
         }
         prod.venta_id = id;
         prod.id = null;
-        await DetalleVenta.create(prod);
+
+        try {
+          await DetalleVenta.create(prod);
+        } catch (error) {
+          reject(error);
+        }
 
         let almacenP: any = await AlmacenesProducto.findOne({
           where: { producto_id: prod.producto_id, almacen_id: prod.almacen_id },
