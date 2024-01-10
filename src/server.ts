@@ -75,7 +75,7 @@ class Server {
     this.app.use(
       "/api/empresa",
       validarJWT,
-      
+      upload.single("imagen"),
       empresaRoutes
     );
   }
