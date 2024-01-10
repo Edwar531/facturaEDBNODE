@@ -12,9 +12,9 @@ export const resizeImg = async (
     await fs.mkdirSync(newPath);
   }
 
-  await sharp(filePath).resize(size).toFile(`${newPath}/${fileName}`);
+  // await sharp(filePath).resize(size).toFile(`${newPath}/${fileName}`);
 
-  fs.unlink("./src/assets/preImgs/" + fileName, (e) => {
-    console.log(e);
-  });
+  // fs.unlink("./src/assets/preImgs/" + fileName, (e) => {
+  //   console.log(e);
+  // });
 };

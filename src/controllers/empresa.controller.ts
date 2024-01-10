@@ -60,9 +60,9 @@ export const subirImagen = async (req: Request, res: Response) => {
       path = path.split("src");
       path = path[1];
       path = "src" + path;
-      // if (fs.existsSync(path)) {
-      //   await fs.unlinkSync(path);
-      // }
+      if (fs.existsSync(path)) {
+        await fs.unlinkSync(path);
+      }
     }
 
     empresa.path_img = `${req.protocol}://${req.get("host")}/${pathSave}/${
