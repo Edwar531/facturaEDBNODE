@@ -52,7 +52,7 @@ export const subirImagen = async (req: Request, res: Response) => {
     },
   });
 
-  const pathSave = `src/assets/imgs-empresas/${user_id}`;
+  const pathSave = `./src/assets/imgs-empresas/${user_id}`;
 
   if (empresa) {
     let path: any = empresa.path_img;
@@ -65,13 +65,13 @@ export const subirImagen = async (req: Request, res: Response) => {
       }
     }
 
-    empresa.path_img = `${req.protocol}://${req.get("host")}/${pathSave}/${
-      req.file?.filename
-    }`;
+    empresa.path_img = `${req.protocol}://${req.get(
+      "host"
+    )}/api/public/imgs-empresas/${user_id}/${req.file?.filename}`;
     empresa.save();
   }
 
-  // resizeImg(req.file?.path, pathSave, req.file?.filename, 300);
+  resizeImg(req.file?.path, pathSave, req.file?.filename, 300);
 
   res.json({ msg: "éxito" });
 };

@@ -1,7 +1,8 @@
 import express, { Application } from "express";
 import cors from "cors";
 import multer from "multer";
-express.static("./src/assets");
+express.static(__dirname +"/assets");
+
 // rutas
 import authRoutes from "./routes/auth.route";
 import clientesRoutes from "./routes/clientes.route";
@@ -22,7 +23,7 @@ const corsOptions = {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./src/assets/preImgs");
+    cb(null, __dirname +"/assets/preImgs");
   },
   filename: (req, file, cb) => {
     const ext = file.originalname.split(".").pop();
@@ -61,7 +62,7 @@ class Server {
   }
 
   routes() {
-    this.app.use("/src/assets/", express.static("./src/assets/"));
+    this.app.use("/api/public/", express.static(__dirname +"/assets/"));
     this.app.use("/api/auth", authRoutes);
     this.app.use("/api/comercio/ventas", validarJWT, ventasRoutes);
     this.app.use(
