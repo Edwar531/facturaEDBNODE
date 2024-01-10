@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getOrder, getPagination, getPagingData } from "../helpers/pagination";
 import { PreciosAddProducto } from "../models/inventario/preciosAddProducto.model";
 import { Almacen } from "../models/inventario/almacen.model";
+import { Op } from "sequelize";
 
 export const getAlmacenes = async (req: Request, res: Response) => {
   const { uid: user_id } = req.body;
@@ -29,8 +30,24 @@ export const getAlmacenes = async (req: Request, res: Response) => {
 };
 
 export const postAlmacen = async (req: Request, res: Response) => {
-  const { uid: user_id, id } = req.body;
+  const { uid: user_id, id, nombre } = req.body;
   const body = req.body;
+
+  const codigoExist = await Almacen.findOne({
+    where: {
+      user_id,
+      id: { [Op.ne]: id },
+      nombre,
+    },
+  });
+
+  if (codigoExist) {
+    let errors: any = {};
+    errors.nombre = "Ya existe un producto con el nombre: " + nombre;
+    return res.status(422).json({
+      errors,
+    });
+  }
 
   if (id) {
     try {

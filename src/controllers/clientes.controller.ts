@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Cliente } from "../models/cliente.model";
 import { getPagination, getPagingData } from "../helpers/pagination";
-import Sequelize from "sequelize";
+import Sequelize, { Op } from "sequelize";
 
 export const getClientes = async (req: Request, res: Response) => {
   const { uid } = req.body;
@@ -51,14 +51,47 @@ export const getClientes = async (req: Request, res: Response) => {
 };
 
 export const postCliente = async (req: Request, res: Response) => {
-  const { uid, id } = req.body;
+  const { uid: user_id, id, identificacion, email } = req.body;
   const body = req.body;
+
+  let errors: any = {};
+  const identificacionExist = await Cliente.findOne({
+    where: {
+      user_id,
+      id: { [Op.ne]: id },
+      identificacion,
+    },
+  });
+
+  if (identificacionExist) {
+    errors.identificacion =
+      "Ya existe un cliente con la identificación: " + identificacion;
+  }
+
+  const emailExist = await Cliente.findOne({
+    where: {
+      user_id,
+      id: { [Op.ne]: id },
+      email,
+    },
+  });
+
+  if (emailExist) {
+    errors.email = "Ya existe un cliente con el correo: " + email;
+  }
+
+  if (Object.keys(errors).length != 0) {
+    return res.status(422).json({
+      errors,
+    });
+  }
+
   // actualizar
   if (id) {
     try {
       const cliente = await Cliente.findOne({
         where: {
-          user_id: uid,
+          user_id,
           id,
         },
       });
@@ -76,8 +109,8 @@ export const postCliente = async (req: Request, res: Response) => {
     }
   } else {
     // nuevo
-    body.user_id = uid;
     try {
+      body.user_id = user_id;
       const cliente = await Cliente.create(body);
       res.json({
         message: "Cliente creado con éxito.",

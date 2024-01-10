@@ -6,7 +6,7 @@ interface attributes {
   user_id: number;
   descripcion: string;
   porcentaje_ganancia: number;
-  deshabilitado: number;
+  deshabilitado: any;
 }
 
 interface ModelInstance extends Model<attributes>, attributes {}

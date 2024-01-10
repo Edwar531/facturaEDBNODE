@@ -109,6 +109,23 @@ export const getProductos = async (req: Request, res: Response) => {
 export const postProducto = async (req: Request, res: Response) => {
   const { uid, id, almacenes } = req.body;
   const body = req.body;
+  const codigo = body.codigo;
+
+  const codigoExist = await Producto.findOne({
+    where: {
+      user_id: uid,
+      id: { [Op.ne]: id },
+      codigo,
+    },
+  });
+
+  if (codigoExist) {
+    let errors:any = {};
+    errors.codigo = "Ya existe un producto con el código: " + codigo;
+    return res.status(422).json({
+      errors
+    });
+  }
 
   if (id) {
     try {

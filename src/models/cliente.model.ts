@@ -12,7 +12,7 @@ interface Attributes {
   telefono: string;
   ciudad: string;
   direccion: string;
-  deshabilitado: number;
+  deshabilitado: any;
 }
 
 interface ModelInstance extends Model<Attributes>, Attributes {}

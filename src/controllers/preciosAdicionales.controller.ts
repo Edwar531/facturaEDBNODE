@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Cliente } from "../models/cliente.model";
 import { getOrder, getPagination, getPagingData } from "../helpers/pagination";
 import { PreciosAddProducto } from "../models/inventario/preciosAddProducto.model";
+import { Op } from "sequelize";
 
 export const getPreciosAds = async (req: Request, res: Response) => {
   const { uid: user_id } = req.body;
@@ -31,6 +32,45 @@ export const getPreciosAds = async (req: Request, res: Response) => {
 export const postPreciosAds = async (req: Request, res: Response) => {
   const { uid: user_id, id } = req.body;
   const body = req.body;
+  const { descripcion, porcentaje_ganancia } = req.body;
+  
+  let errors: any = {};
+  const descripcionExist = await PreciosAddProducto.findOne({
+    where: {
+      user_id,
+      id: { [Op.ne]: id },
+      descripcion,
+    },
+  });
+
+  if (descripcionExist) {
+    errors.descripcion =
+      "Ya existe un precio con la descripción: " + descripcion;
+  }
+
+  const porcentaje_gananciaExist = await PreciosAddProducto.findOne({
+    where: {
+      user_id,
+      id: { [Op.ne]: id },
+      porcentaje_ganancia,
+    },
+  });
+
+  if (porcentaje_gananciaExist) {
+    errors.porcentaje_ganancia =
+      "Ya existe un precio con el porcentaje: " + porcentaje_ganancia;
+  }
+
+  if (Object.keys(errors).length != 0) {
+    return res.status(422).json({
+      errors,
+    });
+  }
+
+  //   $this->validate($request, [
+  //     'descripcion' => 'required|' . Rule::unique('precios_add_productos')->where('user_id', $user_id)->ignore($request->id),
+  //     'porcentaje_ganancia' => 'required|' . Rule::unique('precios_add_productos')->where('user_id', $user_id)->ignore($request->id),
+  // ]);
 
   if (id) {
     try {

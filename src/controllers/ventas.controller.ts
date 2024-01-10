@@ -178,19 +178,18 @@ export const postVenta = async (req: Request, res: Response) => {
   }
 
   // validar detalles
-  if (id) {
-    let errorsValid: any = {};
-    try {
-      errorsValid = await validarDetalles(detalles, id, res);
-      if (Object.keys(errorsValid).length != 0) {
-        return res.status(422).json({
-          errors: errorsValid,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json(error);
+
+  let errorsValid: any = {};
+  try {
+    errorsValid = await validarDetalles(detalles, id);
+    if (Object.keys(errorsValid).length != 0) {
+      return res.status(422).json({
+        errors: errorsValid,
+      });
     }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
   }
 
   let venta_id: any = "";
@@ -271,7 +270,7 @@ const generarSecuencial = async (user_id: number) => {
   });
 };
 
-const validarDetalles = async (detalles: any[], id: number, res: Response) => {
+const validarDetalles = async (detalles: any[], id: number) => {
   return new Promise(async (resolve, reject) => {
     let errores: any = [];
     let detallesAnt;
@@ -279,6 +278,7 @@ const validarDetalles = async (detalles: any[], id: number, res: Response) => {
       detallesAnt = await DetalleVenta.findAll({
         where: { venta_id: id },
       });
+      console.log(detallesAnt);
 
       errores = await getErroresDetalles(detalles, detallesAnt);
       resolve(errores);
@@ -292,12 +292,16 @@ const getErroresDetalles = async (detalles: any, detallesAnt: any) => {
   const promesa = new Promise((resolve, reject) => {
     try {
       let errores: any = {};
+      let count = 0;
       detalles.forEach(async (el: any, i: any) => {
+        console.log("getErroresDetalles");
+
         let error: any = await productoDisponible(el, detallesAnt);
         if (error?.error) {
           errores["cantidad_" + i] = error.message;
         }
-        if (i == detalles.length - 1) {
+        count++;
+        if (detalles.length == count) {
           resolve(errores);
         }
       });
@@ -322,9 +326,14 @@ const productoDisponible = async (detalle: any, detallesAnt: any) => {
 
     let disponible = 0;
     if (almacen) {
-      disponible = almacen.cantidad + cantAnt;
+      disponible = Number(almacen.cantidad) + Number(cantAnt);
     }
-    if (detalle["cantidad"] > disponible) {
+    console.log("cant Ant: " + cantAnt);
+
+    console.log("disponible: " + disponible);
+    console.log("detalle cantidad: " + detalle.cantidad);
+
+    if (detalle.cantidad > disponible) {
       return { error: true, message: `Max. disponible:${disponible}` };
     }
     return { error: false };
@@ -337,12 +346,22 @@ const getCantAnt = async (detallesAnt: any, pro: any) => {
   return new Promise((resolve, reject) => {
     const id = pro["producto_id"];
     const almacen_id = pro["almacen_id"];
-
+    if (detallesAnt.length == 0) {
+      resolve(0);
+      return;
+    }
     let cantAnt = 0;
+    let count = 0;
+
     detallesAnt.forEach((el: any, i: number) => {
       if (el.producto_id == id && el.almacen_id == almacen_id) {
         cantAnt = el.cantidad;
 
+        resolve(cantAnt);
+        return;
+      }
+      count++;
+      if (detallesAnt.length == count) {
         resolve(cantAnt);
         return;
       }
@@ -357,7 +376,7 @@ const guardarDetalles = async (detalles: any, id: number, res: Response) => {
         where: { venta_id: id },
       });
       await borrarDetallesAnt(detallesAnt);
-
+      let count = 0;
       detalles.forEach(async (prod: any, i: number) => {
         let data;
         if (prod.grabaiva) {
@@ -382,7 +401,8 @@ const guardarDetalles = async (detalles: any, id: number, res: Response) => {
           almacenP.cantidad = almacenP.cantidad - prod.cantidad;
           almacenP.save();
         }
-        if (i == detalles.length - 1) {
+        count++;
+        if (detalles.length == count) {
           resolve("ok");
         }
       });
@@ -398,9 +418,11 @@ const borrarDetallesAnt = (detallesAnt: any) => {
       if (detallesAnt.length == 0) {
         resolve("ok");
       }
+      let count = 0;
       detallesAnt.forEach(async (prod: any, i: number) => {
         await borrarDetalle(prod);
-        if (i == detallesAnt.length - 1) {
+        count++;
+        if (detallesAnt.length == count) {
           resolve("ok");
         }
       });
@@ -441,11 +463,12 @@ const guardarFormaPagos = async (pagos: any, id: number) => {
       await FormaPago.destroy({
         where: { venta_id: id },
       });
-
+      let count = 0;
       pagos.forEach(async (fp: any, i: number) => {
         fp.venta_id = id;
         await FormaPago.create(fp);
-        if (pagos.length - 1 == i) {
+        count++;
+        if (pagos.length == count) {
           resolve("ok");
         }
       });

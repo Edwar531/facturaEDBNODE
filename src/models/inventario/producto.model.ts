@@ -5,19 +5,19 @@ import { AlmacenesProducto } from "./almacenesProducto.model";
 interface Attributes {
   id: any;
   user_id: number;
-  imagenes: string;
+  imagenes: any;
   descripcion: string;
   codigo: string;
   precio_compra: number;
   porcentaje_ganancia: number;
   ganancia: number;
   precio_venta_sin_iva: number;
-  editar_precio: number;
+  editar_precio: any;
   iva: number;
   grabaiva: number;
   precio_venta: number;
-  deshabilitado: number;
-  categoria_producto_id: number;
+  deshabilitado: any;
+  categoria_producto_id: any;
 }
 
 interface ModelInstance extends Model<Attributes>, Attributes {}
