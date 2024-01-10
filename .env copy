@@ -3,4 +3,6 @@ DB_NAME=demofnode
 DB_HOST=localhost
 DB_USER=root
 DB_PASS=
+DB_PORT=
+
 PRIVATEKEYJWT=34j5No3i4j5300f9NSdasA
