@@ -1,7 +1,7 @@
 import express, { Application } from "express";
 import cors from "cors";
 import multer from "multer";
-express.static(__dirname +"/assets");
+express.static(__dirname + "/assets");
 
 // rutas
 import authRoutes from "./routes/auth.route";
@@ -17,13 +17,16 @@ import validarJWT from "./middlewares/validar-jwt";
 import db from "./db/conection";
 
 const corsOptions = {
-  origin: "http://localhost:4200",
+  origin: [
+    "https://demo-facturacion-node.sapienciaweb.com",
+    "http://localhost:4200",
+  ],
   optionsSuccessStatus: 200,
 };
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, __dirname +"/assets/preImgs");
+    cb(null, __dirname + "/assets/preImgs");
   },
   filename: (req, file, cb) => {
     const ext = file.originalname.split(".").pop();
@@ -62,7 +65,7 @@ class Server {
   }
 
   routes() {
-    this.app.use("/api/public/", express.static(__dirname +"/assets/"));
+    this.app.use("/api/public/", express.static(__dirname + "/assets/"));
     this.app.use("/api/auth", authRoutes);
     this.app.use("/api/comercio/ventas", validarJWT, ventasRoutes);
     this.app.use(
