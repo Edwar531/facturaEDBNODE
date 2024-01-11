@@ -71,7 +71,7 @@ export const crearUsuarioPrueba = async (req: Request, res: Response) => {
 
   var salt = bcryptjs.genSaltSync(10);
   let passwordNob = randomize("Aa0", 10);
-  let password = bcryptjs.hashSync("1234", salt);
+  let password = bcryptjs.hashSync(passwordNob, salt);
   const email = user + "@test.com";
 
   user = await Usuario.create({
