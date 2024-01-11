@@ -75,8 +75,8 @@ export const crearUsuarioPrueba = async (req: Request, res: Response) => {
   const email = user + "@test.com";
 
   user = await Usuario.create({
-    name: "edwar",
-    email: "edwar@gmail.com",
+    name: user,
+    email: email,
     password:password,
   });
 
