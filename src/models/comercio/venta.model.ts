@@ -83,9 +83,11 @@ export const Venta = db.define<ModelInstance>("Venta", {
   },
   data_cliente: {
     type: DataTypes.TEXT("long"),
+    allowNull: true,
   },
   cliente_id: {
     type: DataTypes.BIGINT,
+    allowNull: true,
   },
   observaciones: {
     type: DataTypes.TEXT("long"),

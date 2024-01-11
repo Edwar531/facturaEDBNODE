@@ -173,8 +173,8 @@ export const postVenta = async (req: Request, res: Response) => {
     dataV.data_cliente = JSON.stringify(cliente);
     dataV.cliente_id = cliente["id"];
   } else {
-    dataV.data_cliente = "";
-    dataV.cliente_id = false;
+    dataV.data_cliente = null;
+    dataV.cliente_id = null;
   }
 
   // validar detalles

@@ -26,22 +26,19 @@ class Migrations {
     }
   }
 
-  migrar() {
+  async migrar() {
     try {
-      // Usuario.sync();
-      // Cliente.sync();
-      // Almacen.sync();
-
-      // Producto.sync();
-
-      // PreciosAddProducto.sync();
-
-      // AlmacenesProducto.sync();
-      Empresa.sync();
-      Venta.sync();
-      SecuencialesVenta.sync();
-      FormaPago.sync();
-      DetalleVenta.sync();
+      await Usuario.sync();
+      await Cliente.sync();
+      await Almacen.sync();
+      await Producto.sync();
+      await AlmacenesProducto.sync();
+      await PreciosAddProducto.sync();
+      await Venta.sync();
+      await SecuencialesVenta.sync();
+      await DetalleVenta.sync();
+      await FormaPago.sync();
+      await Empresa.sync();
     } catch (error) {
       console.log(error);
     }
